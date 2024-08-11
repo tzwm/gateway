@@ -2,8 +2,11 @@ import { Context } from 'hono';
 import { CONTENT_TYPES, POWERED_BY, VALID_PROVIDERS } from '../../globals';
 import { configSchema } from './schema/config';
 
-export const requestValidator = (c: Context, next: any) => {
-  const requestHeaders = Object.fromEntries(c.req.raw.headers);
+export const requestValidator = async (c: Context, next: any) => {
+  const requestHeaders = {
+    ...Object.fromEntries(c.req.raw.headers),
+    ...c.req.query(),
+  };
 
   const contentType = requestHeaders['content-type'];
   if (

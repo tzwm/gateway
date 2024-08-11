@@ -15,7 +15,10 @@ import { Context } from 'hono';
 export async function chatCompletionsHandler(c: Context): Promise<Response> {
   try {
     let request = await c.req.json();
-    let requestHeaders = Object.fromEntries(c.req.raw.headers);
+    const requestHeaders = {
+      ...Object.fromEntries(c.req.raw.headers),
+      ...c.req.query(),
+    };
     const camelCaseConfig = constructConfigFromRequestHeaders(requestHeaders);
     const tryTargetsResponse = await tryTargetsRecursively(
       c,
